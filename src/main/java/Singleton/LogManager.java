@@ -121,7 +121,7 @@ public class LogManager {
         if (studentList.isEmpty()) {
             System.out.println("StudentList is empty");
         } else {
-            
+
             try{
             FileWriter writer = new FileWriter("./src/main/java/StudentFiles/StudentData.txt", false);
             BufferedWriter bufferWriter = new BufferedWriter(writer);
