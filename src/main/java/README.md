@@ -20,6 +20,6 @@ with a keyboard.
 ---
 ### 3. Architecture oversight
 #### - DataStructure
-When choosing between data structure I went for LinkedList which has fast insertion and maintains the order of elements.
-At first i thougt of having the HashMap hold the students ID as a "key", but then when considering it doesn´t come in numeric
+When choosing between data structure I went for LinkedList which has fast insertion and maintains the order of elements.  
+At first i thought of having the HashMap hold the students ID as a "key", but then when considering it doesn't come in numeric
 order, I choose LinkedList.

@@ -95,7 +95,7 @@ public class LogManager {
             System.out.println("Please try again");
         }
     }
-    // Method to search students in MemoryList by their ID-number
+    // Method to search students by their ID-number
     public void searchStudentById() {
         if (studentList.isEmpty()) {
             System.out.println("Students saved to memory is empty");
@@ -104,7 +104,7 @@ public class LogManager {
             System.out.print("Student ID: ");
             String studentID = scanner.nextLine();
             for(Student student : studentList) {
-                // Check if id written matches a students ID in MemoryList, and display it
+                // Check if id written matches a students ID in memory, and display it
                 if(studentID.equals(String.valueOf(student.getId()))) {
                     System.out.println(" - Student gathered by ID -");
                     System.out.printf(printFormat, "ID", "NAME", "GRADE");
@@ -115,11 +115,13 @@ public class LogManager {
             }
         }
     }
-    // Saves students from MemorList to file
+    // Saves students from Memory(studentList) to file
     public void saveToFile() {
+        // Check if there is any students in list
         if (studentList.isEmpty()) {
             System.out.println("StudentList is empty");
         } else {
+            
             try{
             FileWriter writer = new FileWriter("./src/main/java/StudentFiles/StudentData.txt", false);
             BufferedWriter bufferWriter = new BufferedWriter(writer);
@@ -132,6 +134,7 @@ public class LogManager {
             }
         }
     }
+    // Method that prints List
     public void showStudents() {
             System.out.println(" - Studentlist -");
             System.out.printf(printFormat, "ID", "NAME", "GRADE");
@@ -141,7 +144,7 @@ public class LogManager {
         }
     }
 
-    // Adds Students saved to file to a List and display to user
+    // Adds Students saved to file to a List
     public void readFromFile() throws FileNotFoundException {
         FileReader reader = new FileReader("./src/main/java/StudentFiles/StudentData.txt");
         try(BufferedReader bufferedReader = new BufferedReader(reader)) {
@@ -150,8 +153,8 @@ public class LogManager {
             while ((line = bufferedReader.readLine()) != null){
                 String[] studentData = line.split(" ");
                 studentList.add(new Student(Integer.parseInt(studentData[0]),studentData[1] + " " + studentData[2], studentData[3]));
-               // System.out.printf(printFormat, uniqueIdFromFile, studentFromFile.getName(), studentFromFile.getGrade());
             }
+            // runs Method showStudent to display
             showStudents();
         } catch (IOException e) {
             e.printStackTrace();
