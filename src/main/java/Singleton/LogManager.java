@@ -15,13 +15,14 @@ public class LogManager {
     String printFormat = "| %-2s | %-21s | %-5s |%n";
     // Private constructor to prevent instantiation
     private LogManager()  {
-       // studentMemoryList = new LinkedList<>();
+        // Initialize a list that will hold students in memory
         studentList = new LinkedList<>();
-       try {
+        // Run method that fills the list with students from StudentData.txt
+        try {
            readFromFile();
-       } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
            throw new RuntimeException(e);
-       }
+        }
         // While loop containing Main menu (Student Manager System
         boolean running = true;
         while (running) {
@@ -45,6 +46,7 @@ public class LogManager {
                         searchStudentById();
                         break;
                     case 4:
+                        //readFromFile();
                         showStudents();
                         break;
                     case 5:
@@ -63,7 +65,22 @@ public class LogManager {
         }
         return instance;
     }
-    // Method for saving student to memory
+    // Reads text from StudentData.txt and creates the Students, then added to memory (studentList)
+    public void readFromFile() throws FileNotFoundException {
+        FileReader reader = new FileReader("./src/main/java/StudentFiles/StudentData.txt");
+        try(BufferedReader bufferedReader = new BufferedReader(reader)) {
+            String line;
+            // Each line from .txt gives a "Student" with ID, NAME & GRADE added to list
+            while ((line = bufferedReader.readLine()) != null){
+                String[] studentData = line.split(" ");
+                studentList.add(new Student(Integer.parseInt(studentData[0]),studentData[1] + " " + studentData[2], studentData[3]));
+            }
+            // runs Method showStudent to display
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // Method for adding new students to memory
     public void addStudent() {
         Scanner scanner = new Scanner(System.in);
         String nameOfStudent;
@@ -90,38 +107,16 @@ public class LogManager {
         if(answer.equalsIgnoreCase("Y")) {
             Student student = new Student(nameOfStudent, gradeOfStudent);
             studentList.add(student);
-            showStudents();
         } else {
             System.out.println("Please try again");
         }
     }
-    // Method to search students by their ID-number
-    public void searchStudentById() {
-        if (studentList.isEmpty()) {
-            System.out.println("Students saved to memory is empty");
-        } else {
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Student ID: ");
-            String studentID = scanner.nextLine();
-            for(Student student : studentList) {
-                // Check if id written matches a students ID in memory, and display it
-                if(studentID.equals(String.valueOf(student.getId()))) {
-                    System.out.println(" - Student gathered by ID -");
-                    System.out.printf(printFormat, "ID", "NAME", "GRADE");
-                    System.out.println("--------------------------------------");
-                    System.out.printf(printFormat, student.getId(), student.getName(), student.getGrade());
-                    //System.out.println(student.getUniqueId() + " " + student.getName() + " " + student.getGrade() + "\n");
-                }
-            }
-        }
-    }
     // Saves students from Memory(studentList) to file
     public void saveToFile() {
-        // Check if there is any students in list
+        // Check if there is any students in memory
         if (studentList.isEmpty()) {
             System.out.println("StudentList is empty");
         } else {
-
             try{
             FileWriter writer = new FileWriter("./src/main/java/StudentFiles/StudentData.txt", false);
             BufferedWriter bufferWriter = new BufferedWriter(writer);
@@ -134,30 +129,39 @@ public class LogManager {
             }
         }
     }
-    // Method that prints List
+    // Method to search student by their ID-number
+    public void searchStudentById() {
+        if (studentList.isEmpty()) {
+            System.out.println("Students saved to memory is empty");
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Student ID: ");
+            String studentID = scanner.nextLine();
+            if (Integer.parseInt(studentID) >= studentList.size() || Integer.parseInt(studentID) <= 0) {
+                System.out.println("There is no student with this ID");
+                System.out.println("There are " + studentList.size() + " students, please enter a Id between 1 and "
+                + studentList.size() + ".");
+            } else {
+                for(Student student : studentList) {
+                    // Check if what was written matches a students ID in memory, and display it
+                    if (studentID.equals(String.valueOf(student.getId()))) {
+                        System.out.println("\n       - Student gathered by ID -");
+                        System.out.printf(printFormat, "ID", "NAME", "GRADE");
+                        System.out.println("--------------------------------------");
+                        System.out.printf(printFormat, student.getId(), student.getName(), student.getGrade());
+                    }
+            }
+            }
+        }
+    }
+    // Method that prints memory (studentList) to user
     public void showStudents() {
-            System.out.println(" - Studentlist -");
-            System.out.printf(printFormat, "ID", "NAME", "GRADE");
-            System.out.println("--------------------------------------");
+        System.out.println("\n           - Studentlist -");
+        System.out.printf(printFormat, "ID", "NAME", "GRADE");
+        System.out.println("--------------------------------------");
         for (Student student : studentList) {
             System.out.printf(printFormat, student.getId(), student.getName(), student.getGrade());
         }
-    }
-
-    // Adds Students saved to file to a List
-    public void readFromFile() throws FileNotFoundException {
-        FileReader reader = new FileReader("./src/main/java/StudentFiles/StudentData.txt");
-        try(BufferedReader bufferedReader = new BufferedReader(reader)) {
-            String line;
-            // Reads from file and divides the text into int and Strings.
-            while ((line = bufferedReader.readLine()) != null){
-                String[] studentData = line.split(" ");
-                studentList.add(new Student(Integer.parseInt(studentData[0]),studentData[1] + " " + studentData[2], studentData[3]));
-            }
-            // runs Method showStudent to display
-            showStudents();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("--------------------------------------");
     }
 }
